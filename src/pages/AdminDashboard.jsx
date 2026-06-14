@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LoanContext } from '../context/LoanContext';
+import logoImg from '../assets/logo.png';
 import axios from 'axios';
 
 const AdminDashboard = () => {
@@ -188,7 +189,13 @@ const handleLoginSubmit = async (e) => {
             <nav className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/80 px-4 md:px-8 py-4">
                 <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center text-white text-lg shadow-md font-black">M</div>
+                        <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-amber-500/50 flex items-center justify-center bg-zinc-950 shadow-lg shadow-orange-500/20 active:scale-95 transition-transform">
+                                                            <img 
+                                                                src={logoImg} 
+                                                                alt="Ma Shakti Logo" 
+                                                                className="w-full h-full object-cover transform scale-105"
+                                                            />
+                                                    </div>
                         <div>
                             <h1 className="text-xl font-black text-slate-900 tracking-tight">Ma Shakti Dashboard</h1>
                             <div className="flex items-center gap-2 mt-0.5">

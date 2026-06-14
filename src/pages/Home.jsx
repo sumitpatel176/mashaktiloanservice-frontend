@@ -1,9 +1,70 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LoanContext } from '../context/LoanContext';
+import logoImg from '../assets/logo.png';
+
+// 📋 SAARI SERVICES KA SYSTEMATIC DATA ENGINE
+const loanServices = [
+    {
+        title: "1. नोटरी प्रॉपर्टी पर लोन 🏚️",
+        points: ["मकान बनाने के लिए", "मकान खरीदने के लिए", "बने बनाए मकान पर"]
+    },
+    {
+        title: "2. पट्टा प्रॉपर्टी पर लोन 🏘️",
+        desc: "(ग्राम पंचायत / तहसील / ड्रोन पट्टा)",
+        points: [
+            "प्लॉट खरीदने और बनाने के लिए",
+            "मकान बनाने के लिए",
+            "बने बनाए मकान पर",
+            "BT - TOP-UP",
+            "LAP BT - TOP-UP",
+            "BT (Balance Transfer)"
+        ]
+    },
+    {
+        title: "3. रजिस्ट्री प्रॉपर्टी पर लोन 🏡",
+        points: [
+            "प्लॉट खरीदने के लिए",
+            "प्लॉट खरीदकर मकान बनाने के लिए",
+            "मकान निर्माण हेतु",
+            "बने बनाए मकान पर",
+            "BT - TOP-UP",
+            "LAP BT - TOP-UP",
+            "Seller BT - TOP-UP",
+            "BT (Balance Transfer)"
+        ]
+    },
+    {
+        title: "4. वैध / अवैध कॉलोनी में लोन सुविधा 🏠",
+        points: [
+            "मकान बनाने के लिए",
+            "मकान खरीदने के लिए",
+            "बने बनाए मकान पर",
+            "प्लॉट खरीदने व बनाने हेतु",
+            "BT / TOP-UP / LAP सुविधाएं उपलब्ध"
+        ]
+    },
+    {
+        title: "इनकम के अनुसार लोन सुविधा 💼",
+        points: [
+            "नगद (Cash) सैलरी वालों के लिए",
+            "बैंक सैलरी वालों के लिए",
+            "बिजनेस इनकम वालों के लिए",
+            "बिजनेस में कच्ची / पक्की इनकम वालों के लिए"
+        ]
+    },
+    {
+        title: "पर्सनल व कार/व्हीकल लोन 💳🚗",
+        desc: "(ऑटो • लोडिंग गाड़ी • बस • ट्रक आदि)",
+        points: [
+            "पर्सनल लोन (केवल बैंक सैलरी वालों के लिए)",
+            "कार / कमर्शियल व्हीकल लोन",
+            "न्यूनतम दस्तावेज़ और आसान अप्रूवल"
+        ]
+    }
+];
 
 const Home = () => {
-    // 🔥 handleLoanSubmit ko call karenge aur localMsg state se message handle karenge
     const { loading, handleLoanSubmit } = useContext(LoanContext);
     const navigate = useNavigate();
 
@@ -15,7 +76,6 @@ const Home = () => {
         monthlyIncome: ''
     });
 
-    // 🌟 Ekdam sateek local message state (text aur type ke sath)
     const [localMsg, setLocalMsg] = useState({ text: '', type: '' });
 
     const handleChange = (e) => {
@@ -24,17 +84,12 @@ const Home = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        
-        // Context function ko data aur status callback bheja
         handleLoanSubmit(formData, (isSuccess) => {
             if (isSuccess) {
-                // 👍 Success: Form submit ho gaya, sunder sa green message dikhao
                 setLocalMsg({
                     text: '🎉 Form Submitted Successfully! Hum jald hi aapse sampark karenge.',
                     type: 'success'
                 });
-
-                // Form ke saare dabbe turant khali (reset)
                 setFormData({
                     customerName: '',
                     phoneNumber: '',
@@ -42,20 +97,14 @@ const Home = () => {
                     loanAmount: '',
                     monthlyIncome: ''
                 });
-
-                // ⏱️ Theek 4 second baad message ko screen se automatic gayab kar do
                 setTimeout(() => {
                     setLocalMsg({ text: '', type: '' });
                 }, 4000);
-
             } else {
-                // ❌ Error: Agar backend fassa ya database band mila
                 setLocalMsg({
                     text: '🚨 Submission Failed! Kripya check karein aapka Server/Database chal raha hai ya nahi.',
                     type: 'error'
                 });
-
-                // Error message ko 5 second me gayab karenge
                 setTimeout(() => {
                     setLocalMsg({ text: '', type: '' });
                 }, 5000);
@@ -63,7 +112,6 @@ const Home = () => {
         });
     };
 
-    // 🔥 Smooth Scroll functionality to hit the evaluation form directly
     const handleScrollToForm = () => {
         const targetForm = document.getElementById('eligibility-engine-form');
         if (targetForm) {
@@ -81,43 +129,42 @@ const Home = () => {
                     {/* Brand Corporate Identity */}
                     <div className="flex items-center space-x-3 cursor-pointer w-full sm:w-auto justify-between sm:justify-start" onClick={() => navigate('/')}>
                         <div className="flex items-center space-x-3">
-                            <div className="w-9 h-9 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center text-white font-black text-xs shadow-md shadow-orange-500/20">
-                                MS
+                            <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-amber-500/50 flex items-center justify-center bg-zinc-950 shadow-lg shadow-orange-500/20 active:scale-95 transition-transform">
+                                <img 
+                                    src={logoImg} 
+                                    alt="Ma Shakti Logo" 
+                                    className="w-full h-full object-cover transform scale-105"
+                                />
                             </div>
                             <div>
-                                <span className="text-white font-black tracking-tight text-sm md:text-base block">Ma Shakti</span>
-                                <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider block -mt-1">Loan Service</span>
+                                <span className="bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500 bg-clip-text text-transparent font-black tracking-wider text-sm md:text-base block drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                                    MAA SHAKTI
+                                </span>
+                                <span className="bg-gradient-to-r from-amber-300 to-yellow-500 bg-clip-text text-transparent text-[10px] font-bold uppercase tracking-[0.15em] block -mt-0.5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
+                                    LOAN SERVICE
+                                </span>
                             </div>
                         </div>
-                        {/* Compact Mobile Staff Tab */}
                         <button onClick={() => navigate('/admin')} className="sm:hidden text-zinc-500 text-[11px] font-bold bg-zinc-900/50 px-2 py-1 rounded-md border border-zinc-800/40">Staff 💼</button>
                     </div>
 
                     {/* Integrated Contacts & Actions Suite */}
                     <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 w-full sm:w-auto">
-                        
-                        {/* Enterprise Email Tag */}
                         <span className="hidden lg:inline-block text-[11px] text-zinc-500 font-medium border-r border-zinc-800 pr-3 h-4 leading-4">
-                            ✉️ contact@mashaktiloan.com
+                            ✉️ abhiji32479@gmail.com
                         </span>
-
-                        {/* Interactive Click to Call Gateway */}
                         <a 
-                            href="tel:+919876543210" 
+                            href="tel:+917999560815" 
                             className="bg-zinc-900 text-orange-400 border border-zinc-800/80 px-3 py-1.5 rounded-xl text-[11px] font-black tracking-wide hover:bg-zinc-800 transition duration-200"
                         >
-                            📞 Call: +91 98765 43210
+                            📞 Call: +91 79995 60815
                         </a>
-                        
-                        {/* 🔥 GLOBAL ACTION SUBMIT TRIGGER */}
                         <button 
                             onClick={handleScrollToForm}
                             className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white px-4 py-1.5 rounded-xl text-[11px] font-black tracking-wider uppercase shadow-md shadow-orange-500/10 active:scale-95 transition-all cursor-pointer"
                         >
                             Apply Online 🚀
                         </button>
-                        
-                        {/* Desktop Portal Entry */}
                         <button 
                             onClick={() => navigate('/admin')} 
                             className="hidden sm:inline-block bg-zinc-900 hover:bg-zinc-800 text-zinc-400 border border-zinc-800 px-3 py-1.5 rounded-xl text-[11px] font-bold transition cursor-pointer"
@@ -125,7 +172,6 @@ const Home = () => {
                             Staff Portal 💼
                         </button>
                     </div>
-
                 </div>
             </nav>
 
@@ -136,8 +182,7 @@ const Home = () => {
                     <span className="font-medium">Indore's Trusted Financial DSA Network Partner</span>
                 </div>
                 <div className="flex items-center space-x-4 font-bold">
-                    <div className="text-orange-400 bg-orange-500/10 px-2.5 py-1 rounded-md border border-orange-500/20">📞 Helpline: +91 98765 43210</div>
-                    
+                    <div className="text-orange-400 bg-orange-500/10 px-2.5 py-1 rounded-md border border-orange-500/20">📞 Helpline: +91 79995 60815</div>
                     <button 
                         onClick={() => navigate('/admin')} 
                         className="text-slate-500 hover:text-slate-300 text-[11px] font-black uppercase tracking-wider transition border-l border-slate-800 pl-4 cursor-pointer"
@@ -187,10 +232,55 @@ const Home = () => {
                 </div>
             </header>
 
+            {/* 🔥 NEW: PREMIUM DETAILED GRID CATALOGUE FOR LIVE LOANS */}
+            <section className="bg-zinc-950 py-16 px-4 sm:px-6 lg:px-8 border-b border-zinc-900">
+                <div className="max-w-7xl mx-auto">
+                    <div className="text-center mb-12">
+                       <h2 style={{ color: '#ffffff' }} className="text-2xl md:text-3xl font-extrabold text-center block mb-4 antialiased">
+    हर प्रकार की प्रॉपर्टी पर आसान लोन सुविधा <span style={{ color: '#fbbf24' }}>💰</span>
+</h2>
+                        <p className="text-zinc-400 mt-2 text-xs md:text-sm max-w-xl mx-auto">
+                            Indore's Premier Loan Solutions Provider — Aapki property, aapki income, hamara bharosa!
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {loanServices.map((service, index) => (
+                            <div 
+                                key={index} 
+                                className="bg-gradient-to-b from-zinc-900 via-zinc-900 to-zinc-950 border border-zinc-800/70 rounded-2xl p-6 shadow-xl hover:border-amber-500/30 transition-all duration-300 group hover:-translate-y-1"
+                            >
+                                <h3 className="text-base font-bold text-white mb-2 group-hover:text-amber-400 transition-colors">
+                                    {service.title}
+                                </h3>
+                                {service.desc && (
+                                    <p className="text-zinc-500 text-[11px] italic mb-3">{service.desc}</p>
+                                )}
+                                <ul className="space-y-2 border-t border-zinc-800/60 pt-3">
+                                    {service.points.map((point, idx) => (
+                                        <li key={idx} className="flex items-start text-xs text-zinc-300">
+                                            <span className="text-amber-500 mr-2 font-bold">✅</span>
+                                            <span>{point}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Quick Contact Badge Inside Services Section */}
+                    <div className="mt-10 text-center bg-zinc-900/50 border border-zinc-800 px-5 py-3 rounded-xl max-w-md mx-auto">
+                        <p className="text-zinc-300 text-xs">
+                            📞 संपर्क सूत्र: <span className="text-amber-400 font-bold">मनीष पटेल</span> | 📱 <a href="tel:7999560815" className="underline hover:text-amber-300">7999560815</a>
+                        </p>
+                    </div>
+                </div>
+            </section>
+
             {/* 🏛️ MAIN CORE CONTENT GRID */}
             <main className="max-w-7xl mx-auto py-16 px-4 md:px-8 flex-grow w-full grid lg:grid-cols-12 gap-12 items-start">
                 
-                {/* LEFT CORE SECTION: SERVICES CATALOGUE */}
+                {/* LEFT CORE SECTION: ORIGINAL QUICK OVERVIEW */}
                 <div className="lg:col-span-7 space-y-10">
                     <div>
                         <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight relative inline-block">
@@ -235,7 +325,6 @@ const Home = () => {
                         <p className="text-xs text-slate-400 font-medium mt-1">Apni info fill karein, humari sales team aapse coordinate karegi</p>
                     </div>
                     
-                    {/* 🔥 LOCAL STATE VALA SUNDER MSG JO FORM KE THEEK UPAR AAYEGA AUR 4s ME GAYAB HO JAYEGA */}
                     {localMsg.text && (
                         <div className={`p-4 rounded-xl mb-4 text-center text-xs font-bold border transition-all duration-300
                             ${localMsg.type === 'success' 
@@ -264,7 +353,7 @@ const Home = () => {
                                 <option value="Personal Loan">Personal Loan 💼</option>
                                 <option value="Home Loan">Home Loan 🏠</option>
                                 <option value="Business Loan">Business Loan 🚀</option>
-                                <option value="Car Loan">Car Loan 🚗</option>
+                                <option value="Car Loan">Vehical Loan 🚗</option>
                             </select>
                         </div>
 
@@ -298,14 +387,14 @@ const Home = () => {
                     <div className="space-y-4">
                         <h4 className="text-white font-black text-sm tracking-wide uppercase">📍 Corporate Address Hub</h4>
                         <p className="leading-relaxed text-slate-400">
-                            102, First Floor, Shanti Nagar Complex,<br />
-                            Near Vijay Nagar Square, AB Road,<br />
+                            223/35 Mg Road , Opposite Malharganj Thana,<br />
+                            Near By Lal Hospital, AB Road,<br />
                             Indore, Madhya Pradesh - 452010
                         </p>
                     </div>
                     <div className="space-y-3">
                         <h4 className="text-white font-black text-sm tracking-wide uppercase">✉️ Enterprise SLA Timing</h4>
-                        <p>📧 Email Support: contact@mashaktiloan.com</p>
+                        <p>📧 Email Support: abhiji32479@gmail.com</p>
                         <p>⏰ Desk Hours: 10:00 AM - 7:00 PM (Monday to Saturday)</p>
                     </div>
                 </div>
@@ -314,7 +403,7 @@ const Home = () => {
                 </div>
             </footer>
 
-            {/* Security Gateway 2: Smooth Secret Floating Admin Trigger */}
+            {/* Secret Floating Admin Trigger */}
             <div className="fixed bottom-6 right-6 z-50 group">
                 <button 
                     onClick={() => navigate('/admin')} 
