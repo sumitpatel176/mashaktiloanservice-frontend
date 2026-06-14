@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 // 💡 Dono alag-alag kaam ke liye base URLs set kiye hain
-const PUBLIC_API_URL = "http://localhost:8080/api/public/loans";
-const ADMIN_API_URL = "http://localhost:8080/api/admin/loans";
+const PUBLIC_API_URL = "https://mashaktiloanservice-backend.onrender.com/api/public/loans";
+const ADMIN_API_URL = "https://mashaktiloanservice-backend.onrender.com/api/admin/loans";
 
 // 1. Customer ke liye - Naya Loan apply karne ke liye (Bina Login Ke)
 export const applyForLoan = async (loanData) => {

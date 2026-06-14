@@ -27,7 +27,7 @@ export const LoanProvider = ({ children }) => {
         const currentHeaders = getAuthHeaders(activeCreds || authCredentials);
         
         try {
-            const response = await axios.get('http://localhost:8080/api/admin/loans/all', {
+            const response = await axios.get('https://mashaktiloanservice-backend.onrender.com/api/admin/loans/all', {
                 headers: currentHeaders
             });
             setLoans(response.data);
@@ -43,7 +43,7 @@ export const LoanProvider = ({ children }) => {
     // 🔄 2. UPDATE LOAN STATUS (ACCEPT / DECLINE)
     const changeLoanStatus = async (id, newStatus) => {
         try {
-            await axios.put(`http://localhost:8080/api/admin/loans/update-status/${id}?status=${newStatus}`, 
+            await axios.put(`https://mashaktiloanservice-backend.onrender.com/api/admin/loans/update-status/${id}?status=${newStatus}`, 
                 null, 
                 { headers: getAuthHeaders() }
             );
@@ -69,7 +69,7 @@ export const LoanProvider = ({ children }) => {
     // 🗑️ 4. DELETE APPLICATION FROM DATABASE
     const deleteLoanApplication = async (id) => {
         try {
-            await axios.delete(`http://localhost:8080/api/admin/loans/delete/${id}`, {
+            await axios.delete(`https://mashaktiloanservice-backend.onrender.com/api/admin/loans/delete/${id}`, {
                 headers: getAuthHeaders()
             });
             setLoans(prevLoans => prevLoans.filter(loan => loan.id !== id));
@@ -84,7 +84,7 @@ export const LoanProvider = ({ children }) => {
     const handleLoanSubmit = async (formData, onSuccess) => {
     try {
         // 🔥 Aapka Spring Boot ka exact public endpoint hit ho rha h
-        const response = await axios.post('http://localhost:8080/api/public/loans/submit', formData);
+        const response = await axios.post('https://mashaktiloanservice-backend.onrender.com/api/public/loans/submit', formData);
         
         if (response.status === 200 || response.status === 201) {
             // 👍 Koi alert nahi! Seedha component ko bolo ki kaam ho gaya h
