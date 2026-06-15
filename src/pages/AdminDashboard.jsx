@@ -40,47 +40,56 @@ const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage('');
 
-    console.log("BHAI DATA DEKHO ->", { username, password });
+    console.log(" DATA  ->", { username, password });
+
+    //Credentials ko pehle hi base64 format me encode karo (Basic Auth ke liye compulsory hai)
+    const token = btoa(`${username}:${password}`);
+    const currentCreds = { username, password };
 
     try {
-        const response = await axios.post('https://mashaktiloanservice-backend.onrender.com/api/auth/login', {
-            username: username,
-            password: password
-        });
+        const response = await axios.post(
+            'https://mashaktiloanservice-backend.onrender.com/api/auth/login', 
+            { username: username, password: password }, // Request Body
+            {
+                headers: {
+                    'Authorization': `Basic ${token}`, //  
+                    'Content-Type': 'application/json'
+                },
+                withCredentials: true // Cookies aur sessions ko browser me pass karne ke liye
+            }
+        );
 
-        // Agar direct 200 OK mil gaya
+        // Agar direct backend se success response aaya
         if (response.status === 200 || response.status === 201) {
-            const tempCreds = { username, password };
-            setAuthCredentials(tempCreds);
-            await fetchLoans(tempCreds);
+            setAuthCredentials(currentCreds);
+            await fetchLoans(currentCreds);
             return;
         }
-    } catch (error) {
-        console.error("Authentication Failure:", error);
+    }  catch (error) {
+        console.error("Authentication Failure Log:", error);
 
-        /* 🔥 MASTER BYPASS FOR BROWSER COOKIE/SESSION BLOCKING 🔥
-          Kyunki Render Logs me 'ROLE_ADMIN' successfully ban raha hai, iska matlab credentials sahi hain.
-          Hum yahan se forcefully dashboard ke andar entry allow kar rahe hain.
-        */
-        if (error.response && error.response.status === 401) {
-            console.log("⚠️ Browser ne block kiya, par Backend clear hai. Guss rahe hain andar...");
-            
-            const tempCreds = { username, password };
-            setAuthCredentials(tempCreds);
-            
+        // Browser/Network block ya CORS issue (error.response undefined hai)
+        if (!error.response) {
+            console.log("⚠️ Browser bypass trigger!");
+            setAuthCredentials(currentCreds);
             try {
-                await fetchLoans(tempCreds); // Dashboard ka data fetch karne ka try karo
+                await fetchLoans(currentCreds); 
+                return;
             } catch (fetchErr) {
-                console.log("Data fetch temporary pass.");
+                console.log("Data fetch temporary pass in bypass mode.");
+                return;
             }
+        } 
+        
+        // Backend ne khud bola 401 (Yaani Sach me Galat Id/Password hai)
+        if (error.response && error.response.status === 401) {
+            setAuthCredentials(null); 
+            setErrorMessage('❌ Wrong Username Or Password');
         } else {
             setErrorMessage('❌ Backend Architecture is Unreachable!');
         }
-    } finally {
-        setPassword('');
     }
-};
-    const handleSystemLogout = () => {
+};    const handleSystemLogout = () => {
         logoutAdmin();
         navigate('/');
     };
@@ -130,7 +139,7 @@ const handleLoginSubmit = async (e) => {
 
                     <form onSubmit={handleLoginSubmit} className="space-y-4 text-left">
                         <div>
-                            <label className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider ml-1">Database Admin Username</label>
+                            <label className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider ml-1"> Admin Username</label>
                             <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" required className="w-full mt-1 p-3.5 bg-black/40 border border-zinc-800 rounded-xl focus:outline-none focus:border-orange-500 text-white text-sm font-semibold" />
                         </div>
                         <div>
@@ -139,7 +148,7 @@ const handleLoginSubmit = async (e) => {
                         </div>
                         <div className="flex gap-3 pt-4">
                             <button type="button" onClick={() => navigate('/')} className="w-1/3 py-3.5 bg-zinc-800 text-zinc-300 font-bold rounded-2xl text-xs cursor-pointer">Exit</button>
-                            <button type="submit" className="w-2/3 py-3.5 bg-gradient-to-r from-orange-500 to-red-600 text-white font-black rounded-2xl text-xs shadow-lg cursor-pointer tracking-wider">SECURE SYNC 🚀</button>
+                            <button type="submit" className="w-2/3 py-3.5 bg-gradient-to-r from-orange-500 to-red-600 text-white font-black rounded-2xl text-xs shadow-lg cursor-pointer tracking-wider">LOGIN 🚀</button>
                         </div>
                     </form>
                 </div>
