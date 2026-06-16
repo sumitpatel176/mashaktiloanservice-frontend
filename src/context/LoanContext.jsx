@@ -21,7 +21,7 @@ export const LoanProvider = ({ children }) => {
         return {};
     };
 
-    // 📋 1. FETCH ALL LEADS FROM DATABASE
+    //  1. FETCH ALL LEADS FROM DATABASE
     const fetchLoans = async (activeCreds = null) => {
         setLoading(true);
         const currentHeaders = getAuthHeaders(activeCreds || authCredentials);
@@ -40,7 +40,7 @@ export const LoanProvider = ({ children }) => {
         }
     };
 
-    // 🔄 2. UPDATE LOAN STATUS (ACCEPT / DECLINE)
+    //  2. UPDATE LOAN STATUS (ACCEPT / DECLINE)
     const changeLoanStatus = async (id, newStatus) => {
         try {
             await axios.put(`https://mashaktiloanservice-backend.onrender.com/api/admin/loans/update-status/${id}?status=${newStatus}`, 
@@ -60,13 +60,13 @@ export const LoanProvider = ({ children }) => {
         }
     };
 
-    // 🚪 3. SECURE LOGOUT FRAMEWORK
+    //  3. SECURE LOGOUT FRAMEWORK
     const logoutAdmin = () => {
         setAuthCredentials(null); 
         setLoans([]); 
     };
 
-    // 🗑️ 4. DELETE APPLICATION FROM DATABASE
+    //  4. DELETE APPLICATION FROM DATABASE
     const deleteLoanApplication = async (id) => {
         try {
             await axios.delete(`https://mashaktiloanservice-backend.onrender.com/api/admin/loans/delete/${id}`, {
@@ -110,7 +110,7 @@ export const LoanProvider = ({ children }) => {
             fetchLoans, 
             changeLoanStatus,
             deleteLoanApplication, 
-            handleLoanSubmit, // 👈 Yeh missing tha, ab export ho gaya!
+            handleLoanSubmit, 
             setAuthCredentials, 
             logoutAdmin,
             isLoggedIn: !!authCredentials 

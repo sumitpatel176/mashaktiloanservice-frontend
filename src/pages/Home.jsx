@@ -77,6 +77,7 @@ const Home = () => {
     });
 
     const [localMsg, setLocalMsg] = useState({ text: '', type: '' });
+    const [errors, setErrors] = useState({});
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -84,6 +85,44 @@ const Home = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        let validationErrors = {};
+    
+    // 1. Customer Name Validation
+    if (!formData.customerName.trim()) {
+        validationErrors.customerName = "Please Requeired Name";
+    }
+    
+    // 2. Phone Number Validation (Indian Mobile Number Format Check)
+    const phoneRegex = /^[6-9]\d{9}$/; 
+    if (!formData.phoneNumber) {
+        validationErrors.phoneNumber = "Phone Number Requeired!";
+    } else if (!phoneRegex.test(formData.phoneNumber)) {
+        validationErrors.phoneNumber = "Please Enter 10 Digit Number!";
+    }
+    
+    // 3. Loan Amount Validation
+    if (!formData.loanAmount) {
+        validationErrors.loanAmount = "Requeired Loan Amount!";
+    } else if (Number(formData.loanAmount) <= 100000) {
+        validationErrors.loanAmount = "more than 100000!";
+    }
+    
+    // 4. Monthly Income Validation
+    if (!formData.monthlyIncome) {
+        validationErrors.monthlyIncome = "Requeired Monthly income!";
+    } else if (Number(formData.monthlyIncome) <= 0) {
+        validationErrors.monthlyIncome = " More than 0!";
+    }
+
+    // 🚨 AGAR KOI BHI ERROR MILTI HAI: Toh yahan se code ruk jayega aur backend hit nahi hoga
+    if (Object.keys(validationErrors).length > 0) {
+        setErrors(validationErrors);
+        return; 
+    }
+
+    // ✅ AGAR SAB SAHI HAI: Toh purani errors saaf karo aur backend ko data bhejo
+    setErrors({});
+
         handleLoanSubmit(formData, (isSuccess) => {
             if (isSuccess) {
                 setLocalMsg({
@@ -102,7 +141,7 @@ const Home = () => {
                 }, 4000);
             } else {
                 setLocalMsg({
-                    text: '🚨 Submission Failed! Kripya check karein aapka Server/Database chal raha hai ya nahi.',
+                    text: '🚨 Submission Failed! Technical Issue',
                     type: 'error'
                 });
                 setTimeout(() => {
@@ -340,11 +379,13 @@ const Home = () => {
                         <div>
                             <label className="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">Full Applicant Name</label>
                             <input type="text" name="customerName" value={formData.customerName} onChange={handleChange} required className="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 focus:bg-white focus:ring-1 focus:ring-orange-500 text-xs font-bold text-slate-800 transition" placeholder="e.g., Bhavesh Sharma" />
+                            {errors.customerName && <p style={{ color: 'red', fontSize: '14px', margin: '5px 0 0 0' }}>{errors.customerName}</p>}
                         </div>
 
                         <div>
                             <label className="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">Mobile Contact Number</label>
                             <input type="tel" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} required className="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 focus:bg-white focus:ring-1 focus:ring-orange-500 text-xs font-bold text-slate-800 transition" placeholder="e.g., 98765XXXXX" />
+                            {errors.phoneNumber && <p style={{ color: 'red', fontSize: '14px', margin: '5px 0 0 0' }}>{errors.phoneNumber}</p>}
                         </div>
 
                         <div>
@@ -361,10 +402,12 @@ const Home = () => {
                             <div>
                                 <label className="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">Required Capital (₹)</label>
                                 <input type="number" name="loanAmount" value={formData.loanAmount} onChange={handleChange} required className="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 focus:bg-white text-xs font-bold text-slate-800 transition" placeholder="e.g., 500000" />
+                                {errors.loanAmount && <p style={{ color: 'red', fontSize: '14px', margin: '5px 0 0 0' }}>{errors.loanAmount}</p>}
                             </div>
                             <div>
                                 <label className="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">Net Monthly Income (₹)</label>
                                 <input type="number" name="monthlyIncome" value={formData.monthlyIncome} onChange={handleChange} required className="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-orange-500 focus:bg-white text-xs font-bold text-slate-800 transition" placeholder="e.g., 35000" />
+                                {errors.monthlyIncome && <p style={{ color: 'red', fontSize: '14px', margin: '5px 0 0 0' }}>{errors.monthlyIncome}</p>}
                             </div>
                         </div>
 
