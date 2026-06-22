@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {Link , useNavigate } from 'react-router-dom';
 import { LoanContext } from '../context/LoanContext';
 import logoImg from '../assets/logo.png';
 import axios from 'axios';
@@ -145,6 +145,14 @@ const handleLoginSubmit = async (e) => {
                         <div>
                             <label className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider ml-1">Password</label>
                             <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required className="w-full mt-1 p-3.5 bg-black/40 border border-zinc-800 rounded-xl focus:outline-none focus:border-orange-500 text-white text-sm font-semibold tracking-widest" />
+                        </div>
+                        <div className="text-right px-1">
+                            <Link 
+                                to="/forgot-password" 
+                                className="text-[11px] text-zinc-400 hover:text-orange-500 transition-colors font-semibold"
+                                >
+                                Forgot Password?
+                            </Link>
                         </div>
                         <div className="flex gap-3 pt-4">
                             <button type="button" onClick={() => navigate('/')} className="w-1/3 py-3.5 bg-zinc-800 text-zinc-300 font-bold rounded-2xl text-xs cursor-pointer">Exit</button>
